@@ -11,6 +11,7 @@ workflows:
         script: npm install
       - name: Build Android Release APK
         script: |
+          npx expo prebuild --platform android
           cd android
           chmod +x ./gradlew
           ./gradlew assembleRelease
