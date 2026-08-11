@@ -1,0 +1,54 @@
+ROLE SEPARATION IMPLEMENTATION PLAN (Student vs Trader)
+=======================================================
+
+1. OBJECTIVE
+To strictly separate the app experience based on the user's registered role.
+- If Role == "student": Show the existing learning-focused layout (courses, learning materials, student dashboard).
+- If Role == "trader": Hide the student access system completely. Show a focused, trader-centric layout (live signals, market analysis, trading community, advanced tools).
+
+2. DIRECTORY STRUCTURE UPDATES
+Currently, we have:
+  /app/(auth)
+  /app/(guest)
+  /app/(student)  <-- existing student routes & layouts
+
+We will create a new route group exclusively for Traders:
+  /app/(trader)
+    ├── _layout.tsx (Trader-specific Bottom Tabs or Drawer)
+    ├── dashboard.tsx
+    ├── market.tsx
+    ├── profile.tsx
+
+3. ROUTING & REDIRECTION LOGIC
+The redirection logic in the Splash Screen (index.tsx) and Login/Register successful callbacks will be updated.
+
+If user is authenticated:
+  if (user.role === 'student') -> router.replace('/(student)/dashboard')
+  if (user.role === 'trader')  -> router.replace('/(trader)/dashboard')
+
+This strict route separation ensures that a Trader never loads the layout files that contain the "Learning Courses" or "Student Tabs".
+
+4. STATE MANAGEMENT (useAuthStore)
+The user's role will be saved locally inside our global state `useAuthStore`.
+- user: { id: string, name: string, email: string, role: 'student' | 'trader' | 'guest' }
+
+5. UI CHANGES BY ROLE
+STUDENT UI:
+- Bottom Navigation: Dashboard | Courses | Community | Profile
+- Features: Course progress, Video lectures, Assignments.
+
+TRADER UI:
+- Bottom Navigation: Dashboard | Markets | Live Trades | Profile
+- Features: The "Courses" section is completely removed. Replaced with live charts, market trends, or premium signals.
+
+6. API SECURITY (Future Proofing)
+- Every API endpoint should verify the role. Even if a trader somehow tries to request the "/api/courses" endpoint, the backend will reject it with a 403 Forbidden.
+
+7. EXECUTION STEPS (Once Approved)
+Step 1: Create the `/app/(trader)` directory.
+Step 2: Setup a dedicated `_layout.tsx` for the Trader flow without the course tabs.
+Step 3: Update `useAuthStore` to correctly capture and mock the role upon Registration / Login.
+Step 4: Update redirect logic in `Splash Screen`, `Login`, and `Register` screens to route users to the correct dashboard.
+
+=======================================================
+Please review this plan. Once approved, I can start creating the separate Trader routing group and layouts.
