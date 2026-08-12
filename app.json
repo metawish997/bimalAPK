@@ -63,7 +63,8 @@
             "minSdkVersion": 28
           }
         }
-      ]
+      ],
+      "./plugins/withSplitApk.js"
     ],
     "experiments": {
       "typedRoutes": true,
