@@ -54,7 +54,15 @@
           "cameraPermission": "Allow Bimal Institute to access your camera for KYC verification."
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minSdkVersion": 28
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
